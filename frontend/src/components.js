@@ -178,12 +178,27 @@ export const ContentRow = ({ title, movies, onMovieClick }) => {
 // Movie Card Component
 export const MovieCard = ({ movie, onClick, rank }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
+
+  const handleMouseEnter = () => {
+    const timeout = setTimeout(() => {
+      setIsHovered(true);
+    }, 400); // Delay like Netflix
+    setHoverTimeout(timeout);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+    setIsHovered(false);
+  };
 
   return (
     <div 
-      className={`movie-card ${rank ? 'ranked-card' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`movie-card ${rank ? 'ranked-card' : ''} ${isHovered ? 'hovered' : ''}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
       {rank && <div className="rank-number">{rank}</div>}
@@ -204,40 +219,66 @@ export const MovieCard = ({ movie, onClick, rank }) => {
       </div>
       
       {isHovered && (
-        <div className="movie-hover-info">
-          <div className="hover-content">
-            <h3 className="movie-title">{movie.title}</h3>
-            <div className="movie-meta">
-              <span className="movie-rating">{movie.rating}</span>
-              <span className="movie-year">{movie.year}</span>
-              {movie.duration && <span className="movie-duration">{movie.duration}</span>}
-            </div>
-            {movie.description && (
-              <p className="movie-description">{movie.description}</p>
-            )}
-            <div className="hover-actions">
-              <button className="play-hover-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </button>
-              <button className="add-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                </svg>
-              </button>
-              <button className="like-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
-                </svg>
-              </button>
-              <button className="info-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M7 10l5 5 5-5z"/>
-                </svg>
-              </button>
+        <div className="netflix-mini-modal">
+          <div className="mini-modal-image-container">
+            <img src={movie.image} alt={movie.title} className="mini-modal-image" />
+            <div className="mini-modal-overlay">
+              <div className="mini-modal-controls">
+                <button className="mini-play-btn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <button className="mini-add-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                </button>
+                <button className="mini-like-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                  </svg>
+                </button>
+                <button className="mini-dislike-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                  </svg>
+                </button>
+                <button className="mini-expand-btn" onClick={onClick}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                  </svg>
+                </button>
+              </div>
+              
+              {movie.progress && (
+                <div className="mini-modal-progress">
+                  <div className="progress-text">
+                    {Math.floor((movie.progress / 100) * 164)} of 164m
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+          
+          <div className="mini-modal-info">
+            <div className="mini-modal-meta">
+              <span className="match-score">98% Match</span>
+              <span className="mini-rating">{movie.rating}</span>
+              <span className="mini-year">{movie.year}</span>
+              <span className="mini-hd">HD</span>
+            </div>
+            
+            <div className="mini-modal-genres">
+              <span>Crime</span>
+              <span className="genre-dot">•</span>
+              <span>Drama</span>
+              <span className="genre-dot">•</span>
+              <span>Thriller</span>
+            </div>
+          </div>
+          
+          <div className="mini-modal-arrow"></div>
         </div>
       )}
     </div>
