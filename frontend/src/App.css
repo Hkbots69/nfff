@@ -398,8 +398,8 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.2);
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 0 0 4px 4px;
 }
 
@@ -408,6 +408,7 @@ body {
   background: #e50914;
   transition: width 0.3s ease;
   border-radius: 0 0 4px 4px;
+  box-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
 }
 
 .movie-badge {
