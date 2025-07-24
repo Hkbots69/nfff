@@ -218,8 +218,8 @@ export const MovieCard = ({ movie, onClick, rank }) => {
         )}
       </div>
       
-      {/* Force show on first card for debugging */}
-      {(isHovered || movie.id === 2) && (
+      {/* Show on hover */}
+      {isHovered && (
         <div className="netflix-mini-modal">
           <div className="mini-modal-image-container">
             <img src={movie.image} alt={movie.title} className="mini-modal-image" />
