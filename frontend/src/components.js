@@ -183,7 +183,7 @@ export const MovieCard = ({ movie, onClick, rank }) => {
   const handleMouseEnter = () => {
     const timeout = setTimeout(() => {
       setIsHovered(true);
-    }, 100); // Reduced delay for testing
+    }, 500); // Netflix-like delay
     setHoverTimeout(timeout);
   };
 
