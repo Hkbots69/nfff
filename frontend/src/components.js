@@ -218,6 +218,7 @@ export const MovieCard = ({ movie, onClick, rank }) => {
         )}
       </div>
       
+      {/* Always show mini modal for debugging - remove condition temporarily */}
       {isHovered && (
         <div className="netflix-mini-modal">
           <div className="mini-modal-image-container">
